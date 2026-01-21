@@ -20,7 +20,6 @@ const handleSelect = (item: Item, index: number) => {
     cardRefs.value[index]?.playSuccess()
     gameStore.handleCorrect()
     
-    // Check if celebration is needed (we do this in store, but we can add confetti here for every correct answer too)
     // Small confetti for correct answer
     confetti({
       particleCount: 30,
@@ -39,10 +38,11 @@ const handleSelect = (item: Item, index: number) => {
 </script>
 
 <template>
-  <div class="flex-1 w-full p-4 flex items-center justify-center max-w-2xl mx-auto">
+  <div class="w-full h-full flex items-center justify-center">
+    <!-- Grid Container: Use h-full to respect parent height constraints -->
     <div 
-      class="grid gap-3 w-full aspect-square"
-      :class="gameStore.mode === '2x2' ? 'grid-cols-2' : 'grid-cols-3'"
+      class="grid gap-3 w-full max-h-full aspect-square md:aspect-auto md:h-auto md:max-w-xl mx-auto"
+      :class="gameStore.mode === '2x2' ? 'grid-cols-2 grid-rows-2' : 'grid-cols-3 grid-rows-3'"
     >
       <GameCard
         v-for="(item, index) in gameStore.options"

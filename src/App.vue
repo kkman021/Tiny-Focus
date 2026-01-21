@@ -19,16 +19,26 @@ const gameStore = useGameStore()
     <SettingsOverlay />
     <CelebrationOverlay v-if="gameStore.isCelebrating" />
     
-    <div v-if="!gameStore.isPlaying" class="flex-1 flex items-center justify-center">
+    <div v-if="!gameStore.isPlaying" class="flex-1 flex items-center justify-center p-4">
       <WelcomeScreen />
     </div>
 
-    <div v-else class="flex-1 flex flex-col w-full max-w-lg mx-auto h-full p-4 gap-4">
-      <GameHeader />
-      <GameBoard />
+    <!-- Main Game Container -->
+    <!-- Used 'min-h-0' to allow flex child scrolling/shrinking properly -->
+    <div v-else class="flex-1 flex flex-col w-full max-w-lg mx-auto h-full min-h-0 relative">
+      
+      <!-- Top Section -->
+      <div class="flex-none p-4 pb-2 z-10">
+        <GameHeader />
+      </div>
+
+      <!-- Middle Section (Grid) - flexible height -->
+      <div class="flex-1 min-h-0 p-4 pt-0 flex flex-col justify-center">
+        <GameBoard />
+      </div>
       
       <!-- Footer Info -->
-      <div class="text-center text-orange-300/50 text-xs mt-auto pb-2 font-medium">
+      <div class="flex-none text-center text-orange-300/50 text-xs pb-2 font-medium">
          TinyFocus &copy; 2026
       </div>
     </div>
