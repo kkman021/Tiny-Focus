@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  touch-action: manipulation; /* Disable double-tap zoom */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overscroll-behavior: none; /* Prevent pull-to-refresh on mobile */
+  user-select: none; /* Prevent text selection */
+  -webkit-user-select: none;
+  font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
+  background-color: #fdfbf7; /* Warm white background */
+}
+
+/* Hide scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
