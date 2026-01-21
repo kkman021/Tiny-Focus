@@ -3,20 +3,28 @@
 @tailwind utilities;
 
 :root {
-  touch-action: manipulation; /* Disable double-tap zoom */
+  touch-action: manipulation;
 }
 
 body {
   margin: 0;
   padding: 0;
-  overscroll-behavior: none; /* Prevent pull-to-refresh on mobile */
-  user-select: none; /* Prevent text selection */
+  overscroll-behavior: none;
+  user-select: none;
   -webkit-user-select: none;
-  font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
-  background-color: #fdfbf7; /* Warm white background */
+  font-family: 'Fredoka', 'Segoe UI Emoji', sans-serif;
+  background-color: #f0f9ff;
 }
 
-/* Hide scrollbar */
 ::-webkit-scrollbar {
   display: none;
+}
+
+/* Custom patterned background utility */
+.bg-pattern {
+  background-color: #fdfbf7;
+  background-image: radial-gradient(#FFB347 1.5px, transparent 1.5px), radial-gradient(#FFB347 1.5px, #fdfbf7 1.5px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+  background-attachment: fixed;
 }

@@ -6,24 +6,42 @@ const gameStore = useGameStore()
 const audioStore = useAudioStore()
 
 const handleStart = () => {
-  // Initialize Audio Context (must be user gesture)
-  audioStore.playSfx('correct') // Silent or minimal sound to unlock audio
+  audioStore.playSfx('correct')
   gameStore.startGame()
 }
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center h-full w-full bg-orange-50 p-4">
-    <div class="mb-8 text-6xl animate-bounce">🦁</div>
-    <h1 class="text-4xl font-bold text-orange-600 mb-2">TinyFocus</h1>
-    <p class="text-gray-500 mb-12">專注力小遊戲</p>
+  <div class="flex flex-col items-center justify-center w-full max-w-sm mx-auto px-6">
+    <!-- Mascot / Logo Area -->
+    <div class="relative mb-12 animate-bounce-slow">
+      <div class="text-[8rem] filter drop-shadow-xl z-10 relative">🦁</div>
+      <div class="absolute -bottom-4 -right-4 text-[4rem] animate-pulse">⭐</div>
+      <div class="absolute top-0 -left-6 text-[4rem] animate-wiggle">🍎</div>
+    </div>
+
+    <h1 class="text-5xl font-black text-orange-500 mb-2 drop-shadow-sm tracking-wide">TinyFocus</h1>
+    <p class="text-orange-400/80 mb-12 font-medium text-lg">專注力大冒險</p>
     
     <button 
       @click="handleStart"
-      class="bg-orange-500 hover:bg-orange-600 text-white text-3xl font-bold py-8 px-12 rounded-3xl shadow-[0_8px_0_rgb(194,65,12)] active:shadow-none active:translate-y-2 transition-all transform w-full max-w-sm flex items-center justify-center gap-4"
+      class="group relative w-full bg-yellow-400 hover:bg-yellow-300 text-yellow-900 text-4xl font-black py-6 px-12 rounded-[2rem] shadow-[0_10px_0_rgb(234,179,8)] active:shadow-none active:translate-y-[10px] transition-all transform flex items-center justify-center gap-4 overflow-hidden"
     >
-      <span>▶️</span>
-      <span>開始遊戲</span>
+      <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+      <span class="relative z-10">▶️ 開始遊戲</span>
     </button>
   </div>
 </template>
+
+<style scoped>
+.animate-bounce-slow {
+  animation: bounce 3s infinite;
+}
+.animate-wiggle {
+  animation: wiggle 2s ease-in-out infinite;
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(10deg); }
+}
+</style>

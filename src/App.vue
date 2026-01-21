@@ -13,22 +13,22 @@ const gameStore = useGameStore()
 
 <template>
   <main 
-    class="w-screen overflow-hidden bg-orange-50 relative flex flex-col"
+    class="w-screen overflow-hidden bg-pattern relative flex flex-col font-sans"
     :style="{ height: `${height}px` }"
   >
     <SettingsOverlay />
     <CelebrationOverlay v-if="gameStore.isCelebrating" />
     
-    <div v-if="!gameStore.isPlaying" class="flex-1">
+    <div v-if="!gameStore.isPlaying" class="flex-1 flex items-center justify-center">
       <WelcomeScreen />
     </div>
 
-    <div v-else class="flex-1 flex flex-col w-full max-w-lg mx-auto h-full">
+    <div v-else class="flex-1 flex flex-col w-full max-w-lg mx-auto h-full p-4 gap-4">
       <GameHeader />
       <GameBoard />
       
       <!-- Footer Info -->
-      <div class="p-4 text-center text-gray-400 text-xs">
+      <div class="text-center text-orange-300/50 text-xs mt-auto pb-2 font-medium">
          TinyFocus &copy; 2026
       </div>
     </div>
