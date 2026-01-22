@@ -1,16 +1,1083 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-TW">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>TinyFocus - 專注力遊戲</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TinyFocus - 專注力訓練遊戲</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    /* ========== 基礎設定 ========== */
+    body {
+      margin: 0;
+      padding: 0;
+      overscroll-behavior: none;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: 'Segoe UI Emoji', 'Apple Color Emoji', sans-serif;
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* 100dvh fallback */
+    .full-height {
+      height: 100vh;
+      height: 100dvh;
+    }
+
+    /* ========== 動畫 ========== */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    @keyframes bounce-in {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.05); }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes pop-in {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes star-pop {
+      0% { transform: scale(0) rotate(0deg); }
+      50% { transform: scale(1.3) rotate(180deg); }
+      100% { transform: scale(1) rotate(360deg); }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+      50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.8); }
+    }
+
+    @keyframes slide-up {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    @keyframes freeze-spread {
+      0% { opacity: 0; transform: scale(0.5); }
+      50% { opacity: 1; transform: scale(1.05); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes ice-shimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes crack-appear {
+      0% { opacity: 0; transform: scale(0.8) rotate(0deg); }
+      100% { opacity: 0.6; transform: scale(1) rotate(5deg); }
+    }
+
+    @keyframes ice-particle-float {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; }
+      50% { transform: translateY(-5px) scale(1.2); opacity: 1; }
+    }
+
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* ========== 動畫類別 ========== */
+    .animate-float { animation: float 3s ease-in-out infinite; }
+    .animate-bounce-in { animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+    .animate-pop-in { animation: pop-in 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+    .animate-star-pop { animation: star-pop 0.5s ease-out; }
+    .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    .animate-slide-up { animation: slide-up 0.5s ease-out forwards; }
+    .animate-fade-in { animation: fade-in 0.3s ease-out forwards; }
+    .animate-shake { animation: shake 0.5s ease-in-out; }
+
+    /* ========== 背景裝飾 ========== */
+    .bg-decoration {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.1;
+      pointer-events: none;
+    }
+
+    /* ========== 選項卡片 ========== */
+    .option-card {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .option-card:hover { transform: translateY(-5px); }
+    .option-card.selected {
+      transform: scale(1.05);
+      box-shadow: 0 0 0 4px #3b82f6;
+    }
+
+    /* ========== 滑桿 ========== */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+    }
+    input[type="range"]::-webkit-slider-track {
+      background: #e5e7eb;
+      height: 8px;
+      border-radius: 4px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #3b82f6;
+      cursor: pointer;
+      margin-top: -8px;
+    }
+    input[type="range"]::-moz-range-track {
+      background: #e5e7eb;
+      height: 8px;
+      border-radius: 4px;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #3b82f6;
+      cursor: pointer;
+      border: none;
+    }
+
+    /* ========== 遊戲卡片 ========== */
+    .game-card {
+      aspect-ratio: 1;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .game-card:not(:disabled):not(.frozen):hover { transform: scale(1.05); }
+    .game-card:not(:disabled):not(.frozen):active { transform: scale(0.95); }
+    .game-card.error {
+      opacity: 0.3;
+      filter: grayscale(100%);
+      pointer-events: none;
+    }
+    .game-card.success {
+      transform: scale(1.15) !important;
+      box-shadow: 0 0 0 6px #4ade80;
+    }
+    .game-card.frozen {
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* ========== 冰塊效果 ========== */
+    .frozen-overlay { position: relative; }
+    .frozen-overlay::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg,
+        rgba(191, 219, 254, 0.9) 0%,
+        rgba(219, 234, 254, 0.95) 25%,
+        rgba(191, 219, 254, 0.9) 50%,
+        rgba(219, 234, 254, 0.95) 75%,
+        rgba(191, 219, 254, 0.9) 100%);
+      background-size: 200% 200%;
+      border-radius: 1rem;
+      pointer-events: none;
+      z-index: 1;
+      animation: freeze-spread 0.3s ease-out, ice-shimmer 2s ease-in-out infinite;
+      box-shadow: inset 0 0 20px rgba(147, 197, 253, 0.8),
+                  inset 0 0 40px rgba(191, 219, 254, 0.6);
+    }
+    .frozen-overlay::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.8) 49%, rgba(255, 255, 255, 0.8) 51%, transparent 52%),
+        linear-gradient(-45deg, transparent 48%, rgba(255, 255, 255, 0.6) 49%, rgba(255, 255, 255, 0.6) 51%, transparent 52%),
+        linear-gradient(30deg, transparent 45%, rgba(255, 255, 255, 0.4) 48%, transparent 52%);
+      border-radius: 1rem;
+      pointer-events: none;
+      z-index: 2;
+      animation: crack-appear 0.4s ease-out 0.2s both;
+    }
+
+    /* 冰霜粒子 */
+    .ice-particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(191, 219, 254, 0.6) 100%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 3;
+      animation: ice-particle-float 1.5s ease-in-out infinite;
+    }
+
+    /* ========== 慶祝背景 ========== */
+    .celebration-bg {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 25%, #ec4899 50%, #a855f7 75%, #3b82f6 100%);
+      background-size: 400% 400%;
+      animation: gradient-shift 3s ease infinite;
+    }
+
+    /* 隱藏 */
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 overflow-hidden">
+
+  <!-- ==================== 背景裝飾 ==================== -->
+  <div class="bg-decoration w-64 h-64 bg-blue-400 top-10 left-10 animate-float"></div>
+  <div class="bg-decoration w-96 h-96 bg-purple-400 bottom-20 right-20 animate-float" style="animation-delay: 1s;"></div>
+  <div class="bg-decoration w-48 h-48 bg-pink-400 top-1/2 right-10 animate-float" style="animation-delay: 2s;"></div>
+
+  <!-- ==================== 首頁畫面 ==================== -->
+  <div id="homeScreen" class="full-height flex items-center justify-center p-8">
+    <div class="text-center space-y-12">
+
+      <!-- Logo 與標題 -->
+      <div class="animate-bounce-in">
+        <div class="text-9xl mb-6 animate-float">🎯</div>
+        <h1 class="text-7xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 mb-4">
+          TinyFocus
+        </h1>
+        <p class="text-2xl md:text-3xl text-gray-700 font-medium">專注力訓練遊戲</p>
+      </div>
+
+      <!-- 按鈕組 -->
+      <div class="space-y-6 animate-slide-up" style="animation-delay: 0.3s;">
+        <button
+          onclick="startGame()"
+          class="w-full max-w-md px-16 py-8 text-4xl md:text-5xl font-bold text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl shadow-2xl hover:shadow-3xl transform hover:scale-105 active:scale-95 transition-all animate-pulse-glow"
+        >
+          開始遊戲 🚀
+        </button>
+
+        <button
+          onclick="showSettings()"
+          class="w-full max-w-md px-12 py-6 text-2xl md:text-3xl font-bold text-gray-700 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all"
+        >
+          遊戲設定 ⚙️
+        </button>
+      </div>
+
+      <!-- 版本資訊 -->
+      <div class="text-gray-600 text-sm animate-slide-up" style="animation-delay: 0.5s;">
+        <p>TinyFocus v1.0 | 專為 2-5 歲幼兒設計</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== 設定面板 ==================== -->
+  <div id="settingsPanel" class="fixed inset-0 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 z-50 hidden overflow-y-auto">
+
+    <!-- 返回按鈕 -->
+    <div class="absolute top-6 left-6 z-10">
+      <button
+        onclick="closeSettings()"
+        class="px-6 py-3 text-xl font-bold text-gray-700 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all"
+      >
+        ← 返回
+      </button>
+    </div>
+
+    <!-- 設定內容 -->
+    <div class="min-h-full flex items-center justify-center p-6 py-20">
+      <div class="w-full max-w-2xl">
+
+        <!-- 標題 -->
+        <div class="text-center mb-8">
+          <h2 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-2">
+            遊戲設定
+          </h2>
+          <p class="text-gray-600 text-lg">自訂你的遊戲體驗</p>
+        </div>
+
+        <!-- 設定卡片 -->
+        <div class="space-y-6">
+
+          <!-- 難度設定 -->
+          <div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-6">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <span>🎮</span>
+              <span>選擇難度</span>
+            </h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div
+                class="option-card bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl p-6 text-center selected"
+                data-mode="2x2"
+                onclick="selectMode('2x2')"
+              >
+                <div class="text-5xl mb-3">🟦</div>
+                <div class="text-2xl font-bold text-blue-800 mb-1">2 × 2</div>
+                <div class="text-sm text-blue-600">簡單模式</div>
+                <div class="text-xs text-gray-600 mt-2">4 個選項</div>
+              </div>
+              <div
+                class="option-card bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl p-6 text-center"
+                data-mode="3x3"
+                onclick="selectMode('3x3')"
+              >
+                <div class="text-5xl mb-3">🟪</div>
+                <div class="text-2xl font-bold text-purple-800 mb-1">3 × 3</div>
+                <div class="text-sm text-purple-600">困難模式</div>
+                <div class="text-xs text-gray-600 mt-2">9 個選項</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 主題設定 -->
+          <div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-6">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <span>🎨</span>
+              <span>選擇主題</span>
+            </h3>
+            <div class="grid grid-cols-3 gap-3">
+              <div class="option-card bg-gradient-to-br from-green-100 to-green-200 rounded-2xl p-5 text-center selected" data-category="animals" onclick="selectCategory('animals')">
+                <div class="text-4xl mb-2">🦁</div>
+                <div class="text-sm font-bold text-green-800">動物</div>
+              </div>
+              <div class="option-card bg-gradient-to-br from-red-100 to-red-200 rounded-2xl p-5 text-center" data-category="fruits" onclick="selectCategory('fruits')">
+                <div class="text-4xl mb-2">🍎</div>
+                <div class="text-sm font-bold text-red-800">水果</div>
+              </div>
+              <div class="option-card bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl p-5 text-center" data-category="vehicles" onclick="selectCategory('vehicles')">
+                <div class="text-4xl mb-2">🚗</div>
+                <div class="text-sm font-bold text-blue-800">交通</div>
+              </div>
+              <div class="option-card bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-2xl p-5 text-center" data-category="numbers" onclick="selectCategory('numbers')">
+                <div class="text-4xl mb-2">🔢</div>
+                <div class="text-sm font-bold text-yellow-800">數字</div>
+              </div>
+              <div class="option-card bg-gradient-to-br from-pink-100 to-pink-200 rounded-2xl p-5 text-center" data-category="shapes" onclick="selectCategory('shapes')">
+                <div class="text-4xl mb-2">⭐</div>
+                <div class="text-sm font-bold text-pink-800">形狀</div>
+              </div>
+              <div class="option-card bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-2xl p-5 text-center" data-category="mixed" onclick="selectCategory('mixed')">
+                <div class="text-4xl mb-2">🎲</div>
+                <div class="text-sm font-bold text-indigo-800">混合</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 題數設定 -->
+          <div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-6">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <span>📊</span>
+              <span>題目數量</span>
+            </h3>
+            <div>
+              <label class="block text-lg font-medium text-gray-700 mb-3 text-center">
+                <span id="roundsValue" class="text-4xl text-blue-600 font-bold">10</span> 題
+              </label>
+              <input
+                id="roundsSlider"
+                type="range"
+                min="5"
+                max="20"
+                step="5"
+                value="10"
+                class="w-full"
+                oninput="updateRounds(this.value)"
+              />
+              <div class="flex justify-between text-sm text-gray-500 mt-2">
+                <span>5 題</span>
+                <span>10 題</span>
+                <span>15 題</span>
+                <span>20 題</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 語音設定 -->
+          <div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-6">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <span>🔊</span>
+              <span>語音角色</span>
+            </h3>
+            <div class="grid grid-cols-3 gap-3">
+              <div
+                class="option-card bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-5 text-center"
+                data-voice="robot"
+                onclick="selectVoice('robot')"
+              >
+                <div class="text-4xl mb-2">🤖</div>
+                <div class="text-sm font-bold text-gray-800">機器人</div>
+                <div class="text-xs text-gray-500 mt-1">低沉穩重</div>
+              </div>
+              <div
+                class="option-card bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl p-5 text-center selected"
+                data-voice="normal"
+                onclick="selectVoice('normal')"
+              >
+                <div class="text-4xl mb-2">👩‍🏫</div>
+                <div class="text-sm font-bold text-blue-800">溫柔老師</div>
+                <div class="text-xs text-gray-500 mt-1">標準語調</div>
+              </div>
+              <div
+                class="option-card bg-gradient-to-br from-orange-100 to-orange-200 rounded-2xl p-5 text-center"
+                data-voice="cheerful"
+                onclick="selectVoice('cheerful')"
+              >
+                <div class="text-4xl mb-2">🧒</div>
+                <div class="text-sm font-bold text-orange-800">活潑夥伴</div>
+                <div class="text-xs text-gray-500 mt-1">元氣滿滿</div>
+              </div>
+            </div>
+            <button
+              onclick="testVoice()"
+              class="w-full mt-4 py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-lg font-bold rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg hover:shadow-xl"
+            >
+              🔊 試聽語音
+            </button>
+          </div>
+
+          <!-- 其他設定 -->
+          <div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-6">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <span>🎛️</span>
+              <span>其他設定</span>
+            </h3>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                <div class="flex items-center gap-3">
+                  <span class="text-3xl">🔔</span>
+                  <div>
+                    <div class="font-bold text-gray-800 text-lg">音效提示</div>
+                    <div class="text-sm text-gray-600">答題時的音效回饋</div>
+                  </div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="sfxToggle" class="sr-only peer" checked onchange="toggleSfx()">
+                  <div class="w-14 h-8 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-6 peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+              <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                <div class="flex items-center gap-3">
+                  <span class="text-3xl">📳</span>
+                  <div>
+                    <div class="font-bold text-gray-800 text-lg">振動回饋</div>
+                    <div class="text-sm text-gray-600">答錯時的振動提示</div>
+                  </div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="vibrationToggle" class="sr-only peer" checked onchange="toggleVibration()">
+                  <div class="w-14 h-8 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-6 peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 完成按鈕 -->
+        <div class="mt-8">
+          <button
+            onclick="closeSettings()"
+            class="w-full py-6 text-3xl font-bold text-white bg-gradient-to-r from-green-500 to-emerald-500 rounded-3xl shadow-2xl hover:shadow-3xl transform hover:scale-105 active:scale-95 transition-all"
+          >
+            完成設定 ✓
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 遊戲畫面 ==================== -->
+  <div id="gameScreen" class="full-height flex flex-col hidden">
+
+    <!-- 標題列 -->
+    <header class="bg-white shadow-md p-4 flex items-center justify-between relative z-10">
+      <!-- 返回首頁按鈕 -->
+      <button
+        onclick="confirmBackToHome()"
+        class="px-4 py-2 text-lg font-bold text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 active:scale-95 transition-all"
+      >
+        🏠
+      </button>
+      
+      <!-- 目標圖示 -->
+      <div class="flex-1 flex justify-center">
+        <span id="targetIcon" class="text-5xl animate-bounce-in">🦁</span>
+      </div>
+      
+      <!-- 佔位元素保持對稱 -->
+      <div class="w-16"></div>
+    </header>
+
+    <!-- 星星進度條 -->
+    <div class="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 shadow-md px-6 py-4">
+      <div class="bg-white/60 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-inner">
+        <div id="starsContainer" class="flex justify-center gap-3 flex-wrap"></div>
+      </div>
+    </div>
+
+    <!-- 遊戲區域 -->
+    <main class="flex-1 flex items-center justify-center px-6 py-8 overflow-hidden relative">
+      <div id="gridBoard" class="grid gap-4 w-full max-w-2xl relative z-10"></div>
+    </main>
+
+    <!-- 底部資訊 -->
+    <footer class="bg-white shadow-md p-4">
+      <div class="flex items-center justify-center gap-4 text-lg">
+        <div class="text-gray-600">
+          第 <span id="currentRound" class="text-2xl font-bold text-blue-600">1</span>
+          / <span id="totalRounds" class="font-bold">10</span> 題
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ==================== 慶祝畫面 (大) ==================== -->
+  <div id="celebrationBig" class="fixed inset-0 celebration-bg flex items-center justify-center z-50 hidden">
+    <div class="text-center text-white">
+      <div class="text-9xl mb-8 animate-bounce-in">🏆</div>
+      <h2 class="text-6xl md:text-7xl font-bold mb-4 animate-pop-in" style="animation-delay: 0.2s;">完美！</h2>
+      <p class="text-3xl md:text-4xl animate-pop-in" style="animation-delay: 0.4s;">一次就答對！</p>
+    </div>
+  </div>
+
+  <!-- ==================== 慶祝畫面 (中) ==================== -->
+  <div id="celebrationMedium" class="fixed inset-0 bg-gradient-to-br from-green-400 to-blue-400 flex items-center justify-center z-50 hidden">
+    <div class="text-center text-white">
+      <div class="text-8xl mb-6 animate-bounce-in">🎉</div>
+      <h2 class="text-5xl md:text-6xl font-bold mb-4 animate-pop-in" style="animation-delay: 0.2s;">太棒了！</h2>
+      <p class="text-2xl md:text-3xl animate-pop-in" style="animation-delay: 0.4s;">答對了！</p>
+    </div>
+  </div>
+
+  <!-- ==================== 慶祝畫面 (簡) ==================== -->
+  <div id="celebrationSimple" class="fixed inset-0 bg-blue-500/90 flex items-center justify-center z-50 hidden">
+    <div class="text-center text-white">
+      <div class="text-7xl mb-4 animate-bounce-in">✓</div>
+      <h2 class="text-4xl md:text-5xl font-bold animate-pop-in">答對了</h2>
+    </div>
+  </div>
+
+  <!-- ==================== 遊戲結束畫面 ==================== -->
+  <div id="endGameOverlay" class="fixed inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center z-50 hidden">
+    <div class="text-center text-white p-8">
+      <div class="text-9xl mb-8 animate-bounce-in">🏆</div>
+      <h2 class="text-6xl md:text-7xl font-bold mb-6">遊戲結束！</h2>
+      <div class="bg-white/20 backdrop-blur-sm rounded-3xl p-8 mb-8">
+        <p class="text-2xl mb-4">你的成績：</p>
+        <div class="flex justify-center gap-8 text-5xl mb-4">
+          <div class="flex flex-col items-center">
+            <span id="goldStarsCount" class="font-bold">0</span>
+            <span class="text-3xl">⭐</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <span id="silverStarsCount" class="font-bold">0</span>
+            <span class="text-3xl">🌟</span>
+          </div>
+        </div>
+        <p id="scoreMessage" class="text-xl"></p>
+      </div>
+      <div class="space-y-4">
+        <button
+          onclick="restartGame()"
+          class="w-full px-12 py-6 text-3xl font-bold bg-white text-purple-600 rounded-3xl shadow-2xl hover:shadow-3xl transform hover:scale-105 active:scale-95 transition-all"
+        >
+          再玩一次 🔄
+        </button>
+        <button
+          onclick="backToHome()"
+          class="w-full px-12 py-6 text-2xl font-bold bg-white/20 backdrop-blur-sm text-white rounded-2xl hover:bg-white/30 transition-all"
+        >
+          返回首頁 🏠
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==================== 題庫資料 ====================
+    const itemDatabase = {
+      animals: [
+        { id: 'lion', icon: '🦁', name: '獅子' },
+        { id: 'tiger', icon: '🐯', name: '老虎' },
+        { id: 'elephant', icon: '🐘', name: '大象' },
+        { id: 'monkey', icon: '🐵', name: '猴子' },
+        { id: 'panda', icon: '🐼', name: '熊貓' },
+        { id: 'dog', icon: '🐶', name: '狗狗' },
+        { id: 'cat', icon: '🐱', name: '貓咪' },
+        { id: 'rabbit', icon: '🐰', name: '兔子' },
+        { id: 'bear', icon: '🐻', name: '熊' },
+        { id: 'fox', icon: '🦊', name: '狐狸' },
+        { id: 'koala', icon: '🐨', name: '無尾熊' },
+        { id: 'pig', icon: '🐷', name: '豬' }
+      ],
+      fruits: [
+        { id: 'apple', icon: '🍎', name: '蘋果' },
+        { id: 'banana', icon: '🍌', name: '香蕉' },
+        { id: 'orange', icon: '🍊', name: '橘子' },
+        { id: 'grape', icon: '🍇', name: '葡萄' },
+        { id: 'watermelon', icon: '🍉', name: '西瓜' },
+        { id: 'strawberry', icon: '🍓', name: '草莓' },
+        { id: 'peach', icon: '🍑', name: '桃子' },
+        { id: 'pineapple', icon: '🍍', name: '鳳梨' },
+        { id: 'lemon', icon: '🍋', name: '檸檬' },
+        { id: 'cherry', icon: '🍒', name: '櫻桃' },
+        { id: 'kiwi', icon: '🥝', name: '奇異果' },
+        { id: 'mango', icon: '🥭', name: '芒果' }
+      ],
+      vehicles: [
+        { id: 'car', icon: '🚗', name: '汽車' },
+        { id: 'bus', icon: '🚌', name: '公車' },
+        { id: 'train', icon: '🚂', name: '火車' },
+        { id: 'plane', icon: '✈️', name: '飛機' },
+        { id: 'ship', icon: '🚢', name: '船' },
+        { id: 'bike', icon: '🚲', name: '腳踏車' },
+        { id: 'truck', icon: '🚚', name: '卡車' },
+        { id: 'taxi', icon: '🚕', name: '計程車' },
+        { id: 'rocket', icon: '🚀', name: '火箭' },
+        { id: 'helicopter', icon: '🚁', name: '直升機' },
+        { id: 'ambulance', icon: '🚑', name: '救護車' },
+        { id: 'police', icon: '🚓', name: '警車' }
+      ],
+      numbers: [
+        { id: 'one', icon: '1️⃣', name: '一' },
+        { id: 'two', icon: '2️⃣', name: '二' },
+        { id: 'three', icon: '3️⃣', name: '三' },
+        { id: 'four', icon: '4️⃣', name: '四' },
+        { id: 'five', icon: '5️⃣', name: '五' },
+        { id: 'six', icon: '6️⃣', name: '六' },
+        { id: 'seven', icon: '7️⃣', name: '七' },
+        { id: 'eight', icon: '8️⃣', name: '八' },
+        { id: 'nine', icon: '9️⃣', name: '九' },
+        { id: 'ten', icon: '🔟', name: '十' }
+      ],
+      shapes: [
+        { id: 'circle', icon: '🔵', name: '圓形' },
+        { id: 'square', icon: '🟦', name: '方形' },
+        { id: 'triangle', icon: '🔺', name: '三角形' },
+        { id: 'star', icon: '⭐', name: '星星' },
+        { id: 'heart', icon: '❤️', name: '愛心' },
+        { id: 'diamond', icon: '💎', name: '鑽石' },
+        { id: 'moon', icon: '🌙', name: '月亮' },
+        { id: 'sun', icon: '☀️', name: '太陽' },
+        { id: 'cloud', icon: '☁️', name: '雲朵' }
+      ],
+      mixed: []
+    };
+
+    // 初始化混合主題
+    itemDatabase.mixed = [
+      ...itemDatabase.animals.slice(0, 3),
+      ...itemDatabase.fruits.slice(0, 3),
+      ...itemDatabase.vehicles.slice(0, 3),
+      ...itemDatabase.numbers.slice(0, 3)
+    ];
+
+    // ==================== 語音角色設定 ====================
+    const voiceProfiles = {
+      robot: { pitch: 0.6, rate: 0.8, name: '機器人', icon: '🤖' },
+      normal: { pitch: 1.0, rate: 0.9, name: '溫柔老師', icon: '👩‍🏫' },
+      cheerful: { pitch: 1.3, rate: 1.1, name: '活潑夥伴', icon: '🧒' }
+    };
+
+    // ==================== 遊戲設定 ====================
+    const gameConfig = {
+      mode: '2x2',
+      category: 'animals',
+      rounds: 10,
+      voiceType: 'normal',
+      sfxEnabled: true,
+      vibrationEnabled: true
+    };
+
+    // ==================== 遊戲狀態 ====================
+    const gameState = {
+      currentRound: 0,
+      totalRounds: 10,
+      stars: [],
+      mistakeCount: 0,
+      isFrozen: false,
+      currentTarget: null,
+      currentOptions: []
+    };
+
+    // ==================== 畫面切換 ====================
+    function showScreen(screenId) {
+      document.getElementById('homeScreen').classList.add('hidden');
+      document.getElementById('settingsPanel').classList.add('hidden');
+      document.getElementById('gameScreen').classList.add('hidden');
+      document.getElementById(screenId).classList.remove('hidden');
+    }
+
+    // ==================== 設定面板 ====================
+    function showSettings() {
+      showScreen('settingsPanel');
+    }
+
+    function closeSettings() {
+      showScreen('homeScreen');
+      saveConfig();
+    }
+
+    function selectMode(mode) {
+      gameConfig.mode = mode;
+      document.querySelectorAll('[data-mode]').forEach(card => {
+        card.classList.toggle('selected', card.dataset.mode === mode);
+      });
+    }
+
+    function selectCategory(category) {
+      gameConfig.category = category;
+      document.querySelectorAll('[data-category]').forEach(card => {
+        card.classList.toggle('selected', card.dataset.category === category);
+      });
+    }
+
+    function updateRounds(value) {
+      gameConfig.rounds = parseInt(value);
+      document.getElementById('roundsValue').textContent = value;
+    }
+
+    function selectVoice(voiceType) {
+      gameConfig.voiceType = voiceType;
+      document.querySelectorAll('[data-voice]').forEach(card => {
+        card.classList.toggle('selected', card.dataset.voice === voiceType);
+      });
+      const profile = voiceProfiles[voiceType];
+      speak(`我是${profile.name}，很高興認識你！`);
+    }
+
+    function toggleSfx() {
+      gameConfig.sfxEnabled = document.getElementById('sfxToggle').checked;
+    }
+
+    function toggleVibration() {
+      gameConfig.vibrationEnabled = document.getElementById('vibrationToggle').checked;
+      if (gameConfig.vibrationEnabled && 'vibrate' in navigator) navigator.vibrate(50);
+    }
+
+    function testVoice() {
+      const profile = voiceProfiles[gameConfig.voiceType];
+      speak(`你好！我是${profile.name}。這是語音測試。準備好開始遊戲了嗎？`);
+    }
+
+    function saveConfig() {
+      localStorage.setItem('tinyFocusConfig', JSON.stringify(gameConfig));
+    }
+
+    function loadConfig() {
+      const saved = localStorage.getItem('tinyFocusConfig');
+      if (saved) {
+        try {
+          Object.assign(gameConfig, JSON.parse(saved));
+          document.getElementById('roundsSlider').value = gameConfig.rounds;
+          document.getElementById('roundsValue').textContent = gameConfig.rounds;
+          document.getElementById('sfxToggle').checked = gameConfig.sfxEnabled;
+          document.getElementById('vibrationToggle').checked = gameConfig.vibrationEnabled;
+          selectMode(gameConfig.mode);
+          selectCategory(gameConfig.category);
+          selectVoice(gameConfig.voiceType || 'normal');
+        } catch (e) {
+          console.error('載入設定失敗:', e);
+        }
+      }
+    }
+
+    // ==================== 遊戲邏輯 ====================
+    function startGame() {
+      saveConfig();
+      gameState.totalRounds = gameConfig.rounds;
+      gameState.currentRound = 0;
+      gameState.stars = [];
+
+      document.getElementById('totalRounds').textContent = gameState.totalRounds;
+      showScreen('gameScreen');
+      initStars();
+
+      speak('遊戲開始！');
+      setTimeout(() => nextQuestion(), 1000);
+    }
+
+    function initStars() {
+      const container = document.getElementById('starsContainer');
+      container.innerHTML = '';
+      gameState.stars = [];
+      for (let i = 0; i < gameState.totalRounds; i++) {
+        const star = document.createElement('div');
+        star.className = 'text-2xl opacity-20 transition-all';
+        star.textContent = '⭐';
+        container.appendChild(star);
+        gameState.stars.push({ element: star, type: null });
+      }
+    }
+
+    function generateQuestion() {
+      const items = itemDatabase[gameConfig.category];
+      const gridSize = gameConfig.mode === '2x2' ? 4 : 9;
+      if (items.length < gridSize) return null;
+
+      const shuffled = [...items].sort(() => Math.random() - 0.5);
+      const target = shuffled[0];
+      const distractors = shuffled.slice(1, gridSize);
+      const options = [target, ...distractors].sort(() => Math.random() - 0.5);
+      return { target, options };
+    }
+
+    function renderGrid(options) {
+      const grid = document.getElementById('gridBoard');
+      grid.className = `grid gap-4 w-full max-w-2xl relative z-10 ${gameConfig.mode === '2x2' ? 'grid-cols-2' : 'grid-cols-3'}`;
+      grid.innerHTML = '';
+
+      options.forEach((item, index) => {
+        const card = document.createElement('button');
+        card.className = 'game-card bg-white rounded-2xl shadow-lg flex items-center justify-center text-6xl md:text-8xl animate-pop-in';
+        card.style.animationDelay = `${index * 0.05}s`;
+        card.textContent = item.icon;
+        card.dataset.id = item.id;
+        card.onclick = () => handleCardClick(item, card);
+        grid.appendChild(card);
+      });
+    }
+
+    function nextQuestion() {
+      confetti.reset();
+      gameState.currentRound++;
+      gameState.mistakeCount = 0;
+      gameState.isFrozen = false;
+
+      if (gameState.currentRound > gameState.totalRounds) {
+        endGame();
+        return;
+      }
+
+      document.getElementById('currentRound').textContent = gameState.currentRound;
+
+      const question = generateQuestion();
+      if (!question) return;
+
+      gameState.currentTarget = question.target;
+      gameState.currentOptions = question.options;
+
+      const targetIcon = document.getElementById('targetIcon');
+      targetIcon.textContent = question.target.icon;
+      targetIcon.className = 'text-5xl animate-bounce-in';
+
+      renderGrid(question.options);
+      setTimeout(() => speak(`請找出 ${question.target.name}`), 300);
+    }
+
+    function handleCardClick(item, cardElement) {
+      if (gameState.isFrozen) return;
+      if (cardElement.disabled) return;
+      if (cardElement.classList.contains('error')) return;
+
+      if (item.id === gameState.currentTarget.id) {
+        handleSuccess(cardElement);
+      } else {
+        handleError(cardElement);
+      }
+    }
+
+    function handleError(cardElement) {
+      gameState.mistakeCount++;
+      cardElement.classList.add('error', 'animate-shake');
+      cardElement.disabled = true;
+      freezeAllCards();
+
+      if (gameConfig.vibrationEnabled && 'vibrate' in navigator) navigator.vibrate(100);
+
+      if (gameState.mistakeCount === 1) speak('阿比，仔細找！');
+      else if (gameState.mistakeCount === 2) speak('不要亂按！');
+      else speak('慢慢找！');
+
+      setTimeout(() => {
+        cardElement.classList.remove('animate-shake');
+        unfreezeAllCards();
+      }, 1500);
+    }
+
+    function handleSuccess(cardElement) {
+      gameState.isFrozen = true;
+      cardElement.classList.add('success');
+
+      const starType = gameState.mistakeCount === 0 ? 'gold' : 'silver';
+      const starData = gameState.stars[gameState.currentRound - 1];
+      starData.type = starType;
+      starData.element.textContent = starType === 'gold' ? '⭐' : '🌟';
+      starData.element.classList.remove('opacity-20');
+      starData.element.classList.add('animate-star-pop');
+
+      if (gameConfig.sfxEnabled) playSfx('correct');
+
+      if (gameState.mistakeCount === 0) {
+        showCelebration('big');
+        speak('完美！');
+        confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#fbbf24', '#f59e0b', '#ef4444', '#ec4899'] });
+        setTimeout(() => {
+          confetti({ particleCount: 100, angle: 60, spread: 55, origin: { x: 0 } });
+          confetti({ particleCount: 100, angle: 120, spread: 55, origin: { x: 1 } });
+        }, 200);
+      } else if (gameState.mistakeCount <= 2) {
+        showCelebration('medium');
+        speak('太棒了！');
+        confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 }, colors: ['#4ade80', '#3b82f6'] });
+      } else {
+        showCelebration('simple');
+        speak('答對了');
+      }
+
+      setTimeout(() => {
+        hideCelebration();
+        setTimeout(() => nextQuestion(), 300);
+      }, 2000);
+    }
+
+    function freezeAllCards() {
+      gameState.isFrozen = true;
+      document.querySelectorAll('.game-card').forEach(card => {
+        card.classList.add('frozen', 'frozen-overlay');
+        createIceParticles(card);
+      });
+    }
+
+    function unfreezeAllCards() {
+      gameState.isFrozen = false;
+      document.querySelectorAll('.game-card').forEach(card => {
+        if (!card.classList.contains('error')) {
+          card.classList.remove('frozen', 'frozen-overlay');
+          removeIceParticles(card);
+        }
+      });
+    }
+
+    function createIceParticles(cardElement) {
+      for (let i = 0; i < 6; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'ice-particle';
+        particle.style.left = `${10 + Math.random() * 80}%`;
+        particle.style.top = `${10 + Math.random() * 80}%`;
+        particle.style.animationDelay = `${Math.random() * 0.5}s`;
+        cardElement.appendChild(particle);
+      }
+    }
+
+    function removeIceParticles(cardElement) {
+      cardElement.querySelectorAll('.ice-particle').forEach(p => p.remove());
+    }
+
+    function showCelebration(type) {
+      if (type === 'big') document.getElementById('celebrationBig').classList.remove('hidden');
+      else if (type === 'medium') document.getElementById('celebrationMedium').classList.remove('hidden');
+      else document.getElementById('celebrationSimple').classList.remove('hidden');
+    }
+
+    function hideCelebration() {
+      document.getElementById('celebrationBig').classList.add('hidden');
+      document.getElementById('celebrationMedium').classList.add('hidden');
+      document.getElementById('celebrationSimple').classList.add('hidden');
+    }
+
+    function endGame() {
+      const goldStars = gameState.stars.filter(s => s.type === 'gold').length;
+      const silverStars = gameState.stars.filter(s => s.type === 'silver').length;
+
+      document.getElementById('goldStarsCount').textContent = goldStars;
+      document.getElementById('silverStarsCount').textContent = silverStars;
+
+      const percentage = (goldStars / gameState.totalRounds) * 100;
+      let message = '';
+      if (percentage === 100) message = '完美！全部答對！你太厲害了！';
+      else if (percentage >= 80) message = '太棒了！表現優異！';
+      else if (percentage >= 60) message = '很好！繼續加油！';
+      else message = '不錯！多練習會更好！';
+
+      document.getElementById('scoreMessage').textContent = message;
+      document.getElementById('endGameOverlay').classList.remove('hidden');
+
+      speak(`遊戲結束！你獲得了 ${goldStars} 顆金星星，${silverStars} 顆銀星星。${message}`);
+    }
+
+    function restartGame() {
+      document.getElementById('endGameOverlay').classList.add('hidden');
+      gameState.currentRound = 0;
+      gameState.stars = [];
+      initStars();
+      nextQuestion();
+    }
+
+    function backToHome() {
+      document.getElementById('endGameOverlay').classList.add('hidden');
+      showScreen('homeScreen');
+    }
+
+    function confirmBackToHome() {
+      const confirmed = confirm('確定要離開遊戲並返回首頁嗎？目前進度將會遺失。');
+      if (confirmed) {
+        showScreen('homeScreen');
+      }
+    }
+
+    // ==================== 音效 ====================
+    function speak(text) {
+      if ('speechSynthesis' in window) {
+        speechSynthesis.cancel();
+        const profile = voiceProfiles[gameConfig.voiceType] || voiceProfiles.normal;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'zh-TW';
+        utterance.pitch = profile.pitch;
+        utterance.rate = profile.rate;
+        speechSynthesis.speak(utterance);
+      }
+    }
+
+    function playSfx(type) {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (type === 'correct') {
+        osc.frequency.value = 800;
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.3);
+      } else if (type === 'wrong') {
+        osc.frequency.value = 200;
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.2);
+      }
+    }
+
+    // ==================== 初始化 ====================
+    window.addEventListener('load', () => {
+      if ('speechSynthesis' in window) {
+        speechSynthesis.getVoices();
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+          speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+        }
+      }
+      loadConfig();
+    });
+  </script>
+</body>
 </html>
