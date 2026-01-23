@@ -321,60 +321,79 @@
               <span>🎮</span>
               <span>選擇難度</span>
             </h3>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-3 gap-3">
               <div
-                class="option-card bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl p-6 text-center selected"
+                class="option-card bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl p-5 text-center selected"
                 data-mode="2x2"
                 onclick="selectMode('2x2')"
               >
-                <div class="text-5xl mb-3">🟦</div>
-                <div class="text-2xl font-bold text-blue-800 mb-1">2 × 2</div>
-                <div class="text-sm text-blue-600">簡單模式</div>
-                <div class="text-xs text-gray-600 mt-2">4 個選項</div>
+                <div class="text-4xl mb-2">🟦</div>
+                <div class="text-xl font-bold text-blue-800 mb-1">2 × 2</div>
+                <div class="text-xs text-blue-600">簡單</div>
+                <div class="text-xs text-gray-600 mt-1">4 格</div>
               </div>
               <div
-                class="option-card bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl p-6 text-center"
+                class="option-card bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl p-5 text-center"
                 data-mode="3x3"
                 onclick="selectMode('3x3')"
               >
-                <div class="text-5xl mb-3">🟪</div>
-                <div class="text-2xl font-bold text-purple-800 mb-1">3 × 3</div>
-                <div class="text-sm text-purple-600">困難模式</div>
-                <div class="text-xs text-gray-600 mt-2">9 個選項</div>
+                <div class="text-4xl mb-2">🟪</div>
+                <div class="text-xl font-bold text-purple-800 mb-1">3 × 3</div>
+                <div class="text-xs text-purple-600">困難</div>
+                <div class="text-xs text-gray-600 mt-1">9 格</div>
+              </div>
+              <div
+                class="option-card bg-gradient-to-br from-red-100 to-red-200 rounded-2xl p-5 text-center"
+                data-mode="4x4"
+                onclick="selectMode('4x4')"
+              >
+                <div class="text-4xl mb-2">🟥</div>
+                <div class="text-xl font-bold text-red-800 mb-1">4 × 4</div>
+                <div class="text-xs text-red-600">挑戰</div>
+                <div class="text-xs text-gray-600 mt-1">16 格</div>
               </div>
             </div>
           </div>
 
           <!-- 主題設定 -->
           <div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-6">
-            <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2 flex items-center gap-2">
               <span>🎨</span>
               <span>選擇主題</span>
             </h3>
+            <p class="text-sm text-gray-500 mb-4">可多選主題混合出題，或選擇「混合」自動組合</p>
             <div class="grid grid-cols-3 gap-3">
-              <div class="option-card bg-gradient-to-br from-green-100 to-green-200 rounded-2xl p-5 text-center selected" data-category="animals" onclick="selectCategory('animals')">
-                <div class="text-4xl mb-2">🦁</div>
-                <div class="text-sm font-bold text-green-800">動物</div>
+              <div class="option-card bg-gradient-to-br from-green-100 to-green-200 rounded-2xl p-4 text-center selected" data-category="animals" onclick="selectCategory('animals')">
+                <div class="text-3xl mb-1">🦁</div>
+                <div class="text-xs font-bold text-green-800">動物</div>
               </div>
-              <div class="option-card bg-gradient-to-br from-red-100 to-red-200 rounded-2xl p-5 text-center" data-category="fruits" onclick="selectCategory('fruits')">
-                <div class="text-4xl mb-2">🍎</div>
-                <div class="text-sm font-bold text-red-800">水果</div>
+              <div class="option-card bg-gradient-to-br from-red-100 to-red-200 rounded-2xl p-4 text-center" data-category="fruits" onclick="selectCategory('fruits')">
+                <div class="text-3xl mb-1">🍎</div>
+                <div class="text-xs font-bold text-red-800">水果</div>
               </div>
-              <div class="option-card bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl p-5 text-center" data-category="vehicles" onclick="selectCategory('vehicles')">
-                <div class="text-4xl mb-2">🚗</div>
-                <div class="text-sm font-bold text-blue-800">交通</div>
+              <div class="option-card bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl p-4 text-center" data-category="vehicles" onclick="selectCategory('vehicles')">
+                <div class="text-3xl mb-1">🚗</div>
+                <div class="text-xs font-bold text-blue-800">交通</div>
               </div>
-              <div class="option-card bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-2xl p-5 text-center" data-category="numbers" onclick="selectCategory('numbers')">
-                <div class="text-4xl mb-2">🔢</div>
-                <div class="text-sm font-bold text-yellow-800">數字</div>
+              <div class="option-card bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-2xl p-4 text-center" data-category="numbers" onclick="selectCategory('numbers')">
+                <div class="text-3xl mb-1">🔢</div>
+                <div class="text-xs font-bold text-yellow-800">數字</div>
               </div>
-              <div class="option-card bg-gradient-to-br from-pink-100 to-pink-200 rounded-2xl p-5 text-center" data-category="shapes" onclick="selectCategory('shapes')">
-                <div class="text-4xl mb-2">⭐</div>
-                <div class="text-sm font-bold text-pink-800">形狀</div>
+              <div class="option-card bg-gradient-to-br from-pink-100 to-pink-200 rounded-2xl p-4 text-center" data-category="shapes" onclick="selectCategory('shapes')">
+                <div class="text-3xl mb-1">⭐</div>
+                <div class="text-xs font-bold text-pink-800">形狀</div>
               </div>
-              <div class="option-card bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-2xl p-5 text-center" data-category="mixed" onclick="selectCategory('mixed')">
-                <div class="text-4xl mb-2">🎲</div>
-                <div class="text-sm font-bold text-indigo-800">混合</div>
+              <div class="option-card bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-2xl p-4 text-center" data-category="letters" onclick="selectCategory('letters')">
+                <div class="text-3xl mb-1 font-bold text-cyan-600">ABC</div>
+                <div class="text-xs font-bold text-cyan-800">字母</div>
+              </div>
+              <div class="option-card bg-gradient-to-br from-orange-100 to-orange-200 rounded-2xl p-4 text-center" data-category="zhuyin" onclick="selectCategory('zhuyin')">
+                <div class="text-3xl mb-1 font-bold text-orange-600">ㄅㄆ</div>
+                <div class="text-xs font-bold text-orange-800">注音</div>
+              </div>
+              <div class="option-card bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-2xl p-4 text-center col-span-2" data-category="mixed" onclick="selectCategory('mixed')">
+                <div class="text-3xl mb-1">🎲</div>
+                <div class="text-xs font-bold text-indigo-800">混合</div>
               </div>
             </div>
           </div>
@@ -625,7 +644,15 @@
         { id: 'bear', icon: '🐻', name: '熊' },
         { id: 'fox', icon: '🦊', name: '狐狸' },
         { id: 'koala', icon: '🐨', name: '無尾熊' },
-        { id: 'pig', icon: '🐷', name: '豬' }
+        { id: 'pig', icon: '🐷', name: '豬' },
+        { id: 'penguin', icon: '🐧', name: '企鵝' },
+        { id: 'cow', icon: '🐮', name: '牛' },
+        { id: 'mouse', icon: '🐭', name: '老鼠' },
+        { id: 'frog', icon: '🐸', name: '青蛙' },
+        { id: 'chicken', icon: '🐔', name: '雞' },
+        { id: 'duck', icon: '🦆', name: '鴨子' },
+        { id: 'owl', icon: '🦉', name: '貓頭鷹' },
+        { id: 'whale', icon: '🐋', name: '鯨魚' }
       ],
       fruits: [
         { id: 'apple', icon: '🍎', name: '蘋果' },
@@ -639,7 +666,15 @@
         { id: 'lemon', icon: '🍋', name: '檸檬' },
         { id: 'cherry', icon: '🍒', name: '櫻桃' },
         { id: 'kiwi', icon: '🥝', name: '奇異果' },
-        { id: 'mango', icon: '🥭', name: '芒果' }
+        { id: 'mango', icon: '🥭', name: '芒果' },
+        { id: 'coconut', icon: '🥥', name: '椰子' },
+        { id: 'avocado', icon: '🥑', name: '酪梨' },
+        { id: 'blueberry', icon: '🫐', name: '藍莓' },
+        { id: 'melon', icon: '🍈', name: '哈密瓜' },
+        { id: 'pear', icon: '🍐', name: '梨子' },
+        { id: 'greenapple', icon: '🍏', name: '青蘋果' },
+        { id: 'tomato', icon: '🍅', name: '番茄' },
+        { id: 'corn', icon: '🌽', name: '玉米' }
       ],
       vehicles: [
         { id: 'car', icon: '🚗', name: '汽車' },
@@ -653,7 +688,15 @@
         { id: 'rocket', icon: '🚀', name: '火箭' },
         { id: 'helicopter', icon: '🚁', name: '直升機' },
         { id: 'ambulance', icon: '🚑', name: '救護車' },
-        { id: 'police', icon: '🚓', name: '警車' }
+        { id: 'police', icon: '🚓', name: '警車' },
+        { id: 'motorcycle', icon: '🏍️', name: '機車' },
+        { id: 'firetruck', icon: '🚒', name: '消防車' },
+        { id: 'tractor', icon: '🚜', name: '拖拉機' },
+        { id: 'sailboat', icon: '⛵', name: '帆船' },
+        { id: 'metro', icon: '🚇', name: '捷運' },
+        { id: 'scooter', icon: '🛴', name: '滑板車' },
+        { id: 'cablecar', icon: '🚡', name: '纜車' },
+        { id: 'skateboard', icon: '🛹', name: '滑板' }
       ],
       numbers: [
         { id: 'one', icon: '1️⃣', name: '一' },
@@ -665,7 +708,17 @@
         { id: 'seven', icon: '7️⃣', name: '七' },
         { id: 'eight', icon: '8️⃣', name: '八' },
         { id: 'nine', icon: '9️⃣', name: '九' },
-        { id: 'ten', icon: '🔟', name: '十' }
+        { id: 'ten', icon: '🔟', name: '十' },
+        { id: 'eleven', icon: '11', name: '十一', isText: true },
+        { id: 'twelve', icon: '12', name: '十二', isText: true },
+        { id: 'thirteen', icon: '13', name: '十三', isText: true },
+        { id: 'fourteen', icon: '14', name: '十四', isText: true },
+        { id: 'fifteen', icon: '15', name: '十五', isText: true },
+        { id: 'sixteen', icon: '16', name: '十六', isText: true },
+        { id: 'seventeen', icon: '17', name: '十七', isText: true },
+        { id: 'eighteen', icon: '18', name: '十八', isText: true },
+        { id: 'nineteen', icon: '19', name: '十九', isText: true },
+        { id: 'twenty', icon: '20', name: '二十', isText: true }
       ],
       shapes: [
         { id: 'circle', icon: '🔵', name: '圓形' },
@@ -676,18 +729,86 @@
         { id: 'diamond', icon: '💎', name: '鑽石' },
         { id: 'moon', icon: '🌙', name: '月亮' },
         { id: 'sun', icon: '☀️', name: '太陽' },
-        { id: 'cloud', icon: '☁️', name: '雲朵' }
+        { id: 'cloud', icon: '☁️', name: '雲朵' },
+        { id: 'rainbow', icon: '🌈', name: '彩虹' },
+        { id: 'snowflake', icon: '❄️', name: '雪花' },
+        { id: 'fire', icon: '🔥', name: '火焰' },
+        { id: 'droplet', icon: '💧', name: '水滴' },
+        { id: 'lightning', icon: '⚡', name: '閃電' },
+        { id: 'sparkle', icon: '✨', name: '閃亮' },
+        { id: 'pinkheart', icon: '💖', name: '粉紅愛心' }
+      ],
+      letters: [
+        { id: 'a', icon: 'A', name: 'A', isText: true },
+        { id: 'b', icon: 'B', name: 'B', isText: true },
+        { id: 'c', icon: 'C', name: 'C', isText: true },
+        { id: 'd', icon: 'D', name: 'D', isText: true },
+        { id: 'e', icon: 'E', name: 'E', isText: true },
+        { id: 'f', icon: 'F', name: 'F', isText: true },
+        { id: 'g', icon: 'G', name: 'G', isText: true },
+        { id: 'h', icon: 'H', name: 'H', isText: true },
+        { id: 'i', icon: 'I', name: 'I', isText: true },
+        { id: 'j', icon: 'J', name: 'J', isText: true },
+        { id: 'k', icon: 'K', name: 'K', isText: true },
+        { id: 'l', icon: 'L', name: 'L', isText: true },
+        { id: 'm', icon: 'M', name: 'M', isText: true },
+        { id: 'n', icon: 'N', name: 'N', isText: true },
+        { id: 'o', icon: 'O', name: 'O', isText: true },
+        { id: 'p', icon: 'P', name: 'P', isText: true },
+        { id: 'q', icon: 'Q', name: 'Q', isText: true },
+        { id: 'r', icon: 'R', name: 'R', isText: true },
+        { id: 's', icon: 'S', name: 'S', isText: true },
+        { id: 't', icon: 'T', name: 'T', isText: true },
+        { id: 'u', icon: 'U', name: 'U', isText: true },
+        { id: 'v', icon: 'V', name: 'V', isText: true },
+        { id: 'w', icon: 'W', name: 'W', isText: true },
+        { id: 'x', icon: 'X', name: 'X', isText: true },
+        { id: 'y', icon: 'Y', name: 'Y', isText: true },
+        { id: 'z', icon: 'Z', name: 'Z', isText: true }
+      ],
+      zhuyin: [
+        // 聲母 (21個)
+        { id: 'b', icon: 'ㄅ', name: 'ㄅ', isText: true },
+        { id: 'p', icon: 'ㄆ', name: 'ㄆ', isText: true },
+        { id: 'm', icon: 'ㄇ', name: 'ㄇ', isText: true },
+        { id: 'f', icon: 'ㄈ', name: 'ㄈ', isText: true },
+        { id: 'd', icon: 'ㄉ', name: 'ㄉ', isText: true },
+        { id: 't', icon: 'ㄊ', name: 'ㄊ', isText: true },
+        { id: 'n', icon: 'ㄋ', name: 'ㄋ', isText: true },
+        { id: 'l', icon: 'ㄌ', name: 'ㄌ', isText: true },
+        { id: 'g', icon: 'ㄍ', name: 'ㄍ', isText: true },
+        { id: 'k', icon: 'ㄎ', name: 'ㄎ', isText: true },
+        { id: 'h', icon: 'ㄏ', name: 'ㄏ', isText: true },
+        { id: 'j', icon: 'ㄐ', name: 'ㄐ', isText: true },
+        { id: 'q', icon: 'ㄑ', name: 'ㄑ', isText: true },
+        { id: 'x', icon: 'ㄒ', name: 'ㄒ', isText: true },
+        { id: 'zh', icon: 'ㄓ', name: 'ㄓ', isText: true },
+        { id: 'ch', icon: 'ㄔ', name: 'ㄔ', isText: true },
+        { id: 'sh', icon: 'ㄕ', name: 'ㄕ', isText: true },
+        { id: 'r', icon: 'ㄖ', name: 'ㄖ', isText: true },
+        { id: 'z', icon: 'ㄗ', name: 'ㄗ', isText: true },
+        { id: 'c', icon: 'ㄘ', name: 'ㄘ', isText: true },
+        { id: 's', icon: 'ㄙ', name: 'ㄙ', isText: true },
+        // 韻母 (16個)
+        { id: 'a', icon: 'ㄚ', name: 'ㄚ', isText: true },
+        { id: 'o', icon: 'ㄛ', name: 'ㄛ', isText: true },
+        { id: 'e', icon: 'ㄜ', name: 'ㄜ', isText: true },
+        { id: 'eh', icon: 'ㄝ', name: 'ㄝ', isText: true },
+        { id: 'ai', icon: 'ㄞ', name: 'ㄞ', isText: true },
+        { id: 'ei', icon: 'ㄟ', name: 'ㄟ', isText: true },
+        { id: 'ao', icon: 'ㄠ', name: 'ㄠ', isText: true },
+        { id: 'ou', icon: 'ㄡ', name: 'ㄡ', isText: true },
+        { id: 'an', icon: 'ㄢ', name: 'ㄢ', isText: true },
+        { id: 'en', icon: 'ㄣ', name: 'ㄣ', isText: true },
+        { id: 'ang', icon: 'ㄤ', name: 'ㄤ', isText: true },
+        { id: 'eng', icon: 'ㄥ', name: 'ㄥ', isText: true },
+        { id: 'er', icon: 'ㄦ', name: 'ㄦ', isText: true },
+        { id: 'yi', icon: 'ㄧ', name: 'ㄧ', isText: true },
+        { id: 'wu', icon: 'ㄨ', name: 'ㄨ', isText: true },
+        { id: 'yu', icon: 'ㄩ', name: 'ㄩ', isText: true }
       ],
       mixed: []
     };
-
-    // 初始化混合主題
-    itemDatabase.mixed = [
-      ...itemDatabase.animals.slice(0, 3),
-      ...itemDatabase.fruits.slice(0, 3),
-      ...itemDatabase.vehicles.slice(0, 3),
-      ...itemDatabase.numbers.slice(0, 3)
-    ];
 
     // ==================== 語音角色設定 ====================
     const voiceProfiles = {
@@ -699,7 +820,7 @@
     // ==================== 遊戲設定 ====================
     const gameConfig = {
       mode: '2x2',
-      category: 'animals',
+      categories: ['animals'],  // 支援多選，mixed 除外
       rounds: 10,
       voiceType: 'normal',
       sfxEnabled: true,
@@ -714,8 +835,21 @@
       mistakeCount: 0,
       isFrozen: false,
       currentTarget: null,
-      currentOptions: []
+      currentOptions: [],
+      usedTargets: [],
+      questionPool: [],
+      currentItems: []  // 當前遊戲使用的題目集合
     };
+
+    // ==================== 輔助函數 ====================
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
 
     // ==================== 畫面切換 ====================
     function showScreen(screenId) {
@@ -743,9 +877,31 @@
     }
 
     function selectCategory(category) {
-      gameConfig.category = category;
+      if (category === 'mixed') {
+        // 混合模式：單選，清除其他選擇
+        gameConfig.categories = ['mixed'];
+      } else {
+        // 非混合模式：多選切換
+        // 如果目前是混合，先清空
+        if (gameConfig.categories.includes('mixed')) {
+          gameConfig.categories = [];
+        }
+
+        const index = gameConfig.categories.indexOf(category);
+        if (index > -1) {
+          // 已選中，取消選擇（但至少保留一個）
+          if (gameConfig.categories.length > 1) {
+            gameConfig.categories.splice(index, 1);
+          }
+        } else {
+          // 未選中，加入選擇
+          gameConfig.categories.push(category);
+        }
+      }
+
+      // 更新 UI
       document.querySelectorAll('[data-category]').forEach(card => {
-        card.classList.toggle('selected', card.dataset.category === category);
+        card.classList.toggle('selected', gameConfig.categories.includes(card.dataset.category));
       });
     }
 
@@ -754,13 +910,15 @@
       document.getElementById('roundsValue').textContent = value;
     }
 
-    function selectVoice(voiceType) {
+    function selectVoice(voiceType, silent = false) {
       gameConfig.voiceType = voiceType;
       document.querySelectorAll('[data-voice]').forEach(card => {
         card.classList.toggle('selected', card.dataset.voice === voiceType);
       });
-      const profile = voiceProfiles[voiceType];
-      speak(`我是${profile.name}，很高興認識你！`);
+      if (!silent) {
+        const profile = voiceProfiles[voiceType];
+        speak(`我是${profile.name}，很高興認識你！`);
+      }
     }
 
     function toggleSfx() {
@@ -785,14 +943,27 @@
       const saved = localStorage.getItem('tinyFocusConfig');
       if (saved) {
         try {
-          Object.assign(gameConfig, JSON.parse(saved));
+          const parsed = JSON.parse(saved);
+
+          // 向下相容：舊版 category 轉換為 categories 陣列
+          if (parsed.category && !parsed.categories) {
+            parsed.categories = [parsed.category];
+            delete parsed.category;
+          }
+
+          Object.assign(gameConfig, parsed);
           document.getElementById('roundsSlider').value = gameConfig.rounds;
           document.getElementById('roundsValue').textContent = gameConfig.rounds;
           document.getElementById('sfxToggle').checked = gameConfig.sfxEnabled;
           document.getElementById('vibrationToggle').checked = gameConfig.vibrationEnabled;
           selectMode(gameConfig.mode);
-          selectCategory(gameConfig.category);
-          selectVoice(gameConfig.voiceType || 'normal');
+
+          // 更新類別 UI
+          document.querySelectorAll('[data-category]').forEach(card => {
+            card.classList.toggle('selected', gameConfig.categories.includes(card.dataset.category));
+          });
+
+          selectVoice(gameConfig.voiceType || 'normal', true);
         } catch (e) {
           console.error('載入設定失敗:', e);
         }
@@ -800,8 +971,48 @@
     }
 
     // ==================== 遊戲邏輯 ====================
+    function initQuestionPool() {
+      const categories = gameConfig.categories;
+      const gridSize = gameConfig.mode === '2x2' ? 4 : gameConfig.mode === '3x3' ? 9 : 16;
+
+      // 若為混合類別，先初始化
+      if (categories.includes('mixed')) {
+        initMixedCategory();
+        gameState.currentItems = itemDatabase.mixed;
+      } else {
+        // 合併多個類別的題目
+        gameState.currentItems = categories.flatMap(cat => itemDatabase[cat]);
+      }
+
+      // 題庫不足檢查
+      if (gameState.currentItems.length < gridSize) {
+        const catNames = categories.join(', ');
+        alert(`題庫不足！已選類別共 ${gameState.currentItems.length} 個項目，但 ${gameConfig.mode} 模式需要至少 ${gridSize} 個。請增加主題或降低難度。`);
+        return false;
+      }
+
+      // 洗牌題庫作為目標池
+      gameState.questionPool = shuffleArray(gameState.currentItems);
+      gameState.usedTargets = [];
+      return true;
+    }
+
+    function initMixedCategory() {
+      const categories = ['animals', 'fruits', 'vehicles', 'shapes', 'letters', 'zhuyin'];
+      const itemsPerCategory = 4;
+      itemDatabase.mixed = categories.flatMap(cat =>
+        shuffleArray(itemDatabase[cat]).slice(0, itemsPerCategory)
+      );
+    }
+
     function startGame() {
       saveConfig();
+
+      // 初始化題目池，若失敗則返回
+      if (!initQuestionPool()) {
+        return;
+      }
+
       gameState.totalRounds = gameConfig.rounds;
       gameState.currentRound = 0;
       gameState.stars = [];
@@ -828,25 +1039,59 @@
     }
 
     function generateQuestion() {
-      const items = itemDatabase[gameConfig.category];
-      const gridSize = gameConfig.mode === '2x2' ? 4 : 9;
+      const items = gameState.currentItems;
+      const gridSize = gameConfig.mode === '2x2' ? 4 : gameConfig.mode === '3x3' ? 9 : 16;
       if (items.length < gridSize) return null;
 
-      const shuffled = [...items].sort(() => Math.random() - 0.5);
-      const target = shuffled[0];
-      const distractors = shuffled.slice(1, gridSize);
-      const options = [target, ...distractors].sort(() => Math.random() - 0.5);
+      // 從題目池取出目標，避免重複
+      let target;
+      if (gameState.questionPool.length > 0) {
+        target = gameState.questionPool.shift();
+      } else {
+        // 若題目池用完，重新洗牌（排除已用過的）
+        const unused = items.filter(item => !gameState.usedTargets.includes(item.id));
+        if (unused.length > 0) {
+          gameState.questionPool = shuffleArray(unused);
+          target = gameState.questionPool.shift();
+        } else {
+          // 全部用完，重新開始
+          gameState.usedTargets = [];
+          gameState.questionPool = shuffleArray(items);
+          target = gameState.questionPool.shift();
+        }
+      }
+
+      gameState.usedTargets.push(target.id);
+
+      // 選擇干擾項（排除目標）
+      const distractorPool = items.filter(item => item.id !== target.id);
+      const distractors = shuffleArray(distractorPool).slice(0, gridSize - 1);
+      const options = shuffleArray([target, ...distractors]);
+
       return { target, options };
     }
 
     function renderGrid(options) {
       const grid = document.getElementById('gridBoard');
-      grid.className = `grid gap-4 w-full max-w-2xl relative z-10 ${gameConfig.mode === '2x2' ? 'grid-cols-2' : 'grid-cols-3'}`;
+      const colsClass = gameConfig.mode === '2x2' ? 'grid-cols-2' :
+                        gameConfig.mode === '3x3' ? 'grid-cols-3' : 'grid-cols-4';
+      const gapClass = gameConfig.mode === '4x4' ? 'gap-2' : 'gap-4';
+      grid.className = `grid ${gapClass} w-full max-w-2xl relative z-10 ${colsClass}`;
       grid.innerHTML = '';
+
+      const textSize = gameConfig.mode === '4x4' ? 'text-4xl md:text-5xl' : 'text-6xl md:text-8xl';
 
       options.forEach((item, index) => {
         const card = document.createElement('button');
-        card.className = 'game-card bg-white rounded-2xl shadow-lg flex items-center justify-center text-6xl md:text-8xl animate-pop-in';
+        const baseClass = `game-card bg-white rounded-2xl shadow-lg flex items-center justify-center ${textSize} animate-pop-in`;
+
+        // 處理文字類型項目 (letters, numbers 11-20)
+        if (item.isText) {
+          card.className = baseClass + ' font-bold text-blue-600';
+        } else {
+          card.className = baseClass;
+        }
+
         card.style.animationDelay = `${index * 0.05}s`;
         card.textContent = item.icon;
         card.dataset.id = item.id;
@@ -876,7 +1121,11 @@
 
       const targetIcon = document.getElementById('targetIcon');
       targetIcon.textContent = question.target.icon;
-      targetIcon.className = 'text-5xl animate-bounce-in';
+      if (question.target.isText) {
+        targetIcon.className = 'text-5xl animate-bounce-in font-bold text-blue-600';
+      } else {
+        targetIcon.className = 'text-5xl animate-bounce-in';
+      }
 
       renderGrid(question.options);
       setTimeout(() => speak(`請找出 ${question.target.name}`), 300);
